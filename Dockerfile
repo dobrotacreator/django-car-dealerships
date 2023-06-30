@@ -7,7 +7,7 @@ RUN pip install pipenv \
 
 FROM base as celery
 RUN chmod +x entrypoints/entrypoint_celery.sh
-CMD ["celery", "-A", "car_dealerships.car_dealerships", "worker", "-l", "info"]
+CMD ["celery", "-A", "car_dealerships.config", "worker", "-l", "info"]
 
 FROM base as django
 RUN chmod +x entrypoints/entrypoint_django.sh

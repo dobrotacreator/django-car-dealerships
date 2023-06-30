@@ -1,19 +1,18 @@
 from django.db import models
 from django_countries import fields
 
+from core.base_models import BaseModel
 
-class Dealership(models.Model):
+
+class Dealership(BaseModel):
     name = models.CharField(max_length=255)
     location = fields.CountryField()
     car_features = models.OneToOneField('cars.CarFeatures', on_delete=models.CASCADE)
     car_models = models.ManyToManyField('cars.CarModel', through='DealershipCarModel')
     balance = models.DecimalField(max_digits=10, decimal_places=2)
     sales_history = models.ForeignKey('transaction_history.DealershipSupplierHistory', on_delete=models.CASCADE,
-                                      related_name='dealership_sales_history')
+                                      related_name='dealership_sales_history', null=True, blank=True)
     customers = models.ManyToManyField('customers.Customer')
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
 class DealershipCarModel(models.Model):

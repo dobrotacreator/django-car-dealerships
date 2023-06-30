@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class TransactionHistoryConfig(AppConfig):
+class SuppliersConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "transaction_history"
+    name = "src.suppliers"

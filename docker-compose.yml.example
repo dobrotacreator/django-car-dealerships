@@ -28,7 +28,7 @@ services:
     build:
       context: .
       target: celery
-    entrypoint: /app/entrypoint_celery.sh
+    entrypoint: /app/entrypoints/entrypoint_celery.sh
     restart: always
     environment:
       REDIS_HOST: ${REDIS_HOST}
@@ -43,15 +43,15 @@ services:
     build:
       context: .
       target: django
-    entrypoint: /app/entrypoint_django.sh
+    entrypoint: /app/entrypoints/entrypoint_django.sh
     restart: always
     ports:
       - "8000:8000"
     depends_on:
       - celery
     environment:
-      DJANGO_SETTINGS_MODULE: django_social.settings
-    env_file: django_social/.env
+      DJANGO_SETTINGS_MODULE: config.settings
+    env_file: .env
 
   pgadmin:
     container_name: pgadmin
