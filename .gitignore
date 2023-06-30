@@ -1,0 +1,4 @@
+.idea
+.pytest_cache
+.env
+docker-compose.yml
