@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  db:
+    container_name: postgres
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  celery:
+    container_name: celery
+    build:
+      context: .
+      target: celery
+    entrypoint: /app/entrypoints/entrypoint_celery.sh
+    restart: always
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+    depends_on:
+      - redis
+      - db
+
+  web:
+    container_name: django
+    build:
+      context: .
+      target: django
+    entrypoint: /app/entrypoints/entrypoint_django.sh
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - celery
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings
+    env_file: .env
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
+
+volumes:
+  pgdata:
+  redis_data:
