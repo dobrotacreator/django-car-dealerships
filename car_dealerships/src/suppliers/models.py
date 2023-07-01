@@ -4,6 +4,7 @@ from core.base_models import BaseModel
 
 
 class Supplier(BaseModel):
+    user = models.OneToOneField('authorization.User', on_delete=models.CASCADE, related_name='supplier')
     name = models.CharField(max_length=255)
     founding_year = models.PositiveIntegerField()
     description = models.TextField()
