@@ -23,5 +23,9 @@ urlpatterns = [
     path("debug/", include("debug_toolbar.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"),
-    path('api/', include("users.urls")),
+    path('api/', include("src.authorization.urls")),
+    path('api/', include("src.cars.urls")),
+    path('api/', include("src.customers.urls")),
+    path('api/', include("src.dealerships.urls")),
+    path('api/', include("src.suppliers.urls")),
 ]
