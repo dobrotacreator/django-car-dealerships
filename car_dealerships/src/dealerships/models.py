@@ -5,6 +5,7 @@ from core.base_models import BaseModel
 
 
 class Dealership(BaseModel):
+    user = models.OneToOneField('authorization.User', on_delete=models.CASCADE, related_name='dealership')
     name = models.CharField(max_length=255)
     location = fields.CountryField()
     car_features = models.OneToOneField('cars.CarFeatures', on_delete=models.CASCADE)
