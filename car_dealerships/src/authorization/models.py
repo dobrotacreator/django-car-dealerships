@@ -8,4 +8,5 @@ class User(AbstractUser):
         DEALERSHIP = 'Dealership'
         SUPPLIER = 'Supplier'
 
+    is_active = models.BooleanField(default=False)
     role = models.CharField(max_length=10, choices=Roles.choices, default=Roles.CUSTOMER)

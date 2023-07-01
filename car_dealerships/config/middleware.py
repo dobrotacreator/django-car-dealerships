@@ -5,7 +5,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
 import jwt
 
-from users.models import User
+from src.authorization.models import User
 
 
 class JWTAuthenticationMiddleware(BaseAuthentication):
@@ -13,6 +13,21 @@ class JWTAuthenticationMiddleware(BaseAuthentication):
         auth_token = request.headers.get('Authorization')
         if not auth_token:
             return None
+
+        user, auth_token = self.check_token(auth_token)
+        return user, auth_token
+
+    @staticmethod
+    def generate_token(user):
+        payload = {
+            'user_id': user.id,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
+            'iat': datetime.datetime.utcnow()
+        }
+        return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+
+    @staticmethod
+    def check_token(auth_token):
         try:
             jwt_options = {
                 'verify_signature': True,
@@ -32,12 +47,3 @@ class JWTAuthenticationMiddleware(BaseAuthentication):
             raise AuthenticationFailed('Token is invalid')
         except User.DoesNotExist:
             raise AuthenticationFailed('User not found')
-
-    @staticmethod
-    def generate_token(user):
-        payload = {
-            'user_id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
-            'iat': datetime.datetime.utcnow()
-        }
-        return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
