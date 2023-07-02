@@ -1,4 +1,8 @@
 #!/bin/bash
+while !</dev/tcp/db/5432; do
+  echo "Waiting for DB..."
+  sleep 5
+done
 
 echo "Applying database migrations..."
 # python manage.py makemigrations cars customers dealerships suppliers transaction_history
