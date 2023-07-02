@@ -19,11 +19,9 @@ class RegistrationLogic:
             request: The HTTP request object.
             user: The instance of user for registration.
 
-        Returns:
-            A Response object indicating the result of the registration process.
+        Returns: A Response object indicating the result of the registration process.
 
-        Raises:
-            -
+        Raises: -
         """
         token = default_token_generator.make_token(user)
 

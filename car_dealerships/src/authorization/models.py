@@ -10,3 +10,6 @@ class User(AbstractUser):
 
     is_active = models.BooleanField(default=False)
     role = models.CharField(max_length=10, choices=Roles.choices, default=Roles.CUSTOMER)
+
+    class Meta:
+        app_label = 'authorization'
