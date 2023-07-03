@@ -4,19 +4,23 @@ from rest_framework.permissions import AllowAny
 
 from .models import User
 from .serializers import UserSerializer
-from .services import RegistrationLogic, PasswordLogic, ChangeUsernameEmailLogic
+from .services import RegistrationLogic, PasswordLogic, ChangeUsernameEmailLogic, LoginLogic
 
 
 class AuthorizationViewSet(viewsets.ViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
     @action(detail=False, methods=['post'])
     def register(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        password = request.data.get('password')
+        user.set_password(password)
+        user.save()
 
         return RegistrationLogic.send_activation_email(request, user)
 
@@ -26,6 +30,14 @@ class AuthorizationViewSet(viewsets.ViewSet):
         uid = request.GET.get('uid')
 
         return RegistrationLogic.activate_account(token, uid)
+
+    @action(detail=False, methods=['post'])
+    def login(self, request):
+        return LoginLogic.authenticate_user_service(request)
+
+    @action(detail=False, methods=['post'])
+    def logout(self, request):
+        return LoginLogic.logout_user_service()
 
     @action(detail=False, methods=['post'])
     def change_password(self, request):

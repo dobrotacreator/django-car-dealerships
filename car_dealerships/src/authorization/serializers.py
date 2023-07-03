@@ -6,8 +6,10 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'is_active', 'role']
-        read_only_fields = ['id', 'username', 'email', 'is_active']
+        fields = ['id', 'username', 'email', 'password', 'is_active', 'role']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def update(self, instance, validated_data):
         # Exclude 'role' field from update

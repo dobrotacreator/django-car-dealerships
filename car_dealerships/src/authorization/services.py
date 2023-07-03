@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
@@ -6,6 +7,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.response import Response
 
+from config.middleware import JWTAuthenticationMiddleware
 from .models import User
 
 
@@ -28,7 +30,7 @@ class RegistrationLogic:
         # Build activation URL
         current_site = get_current_site(request)
         protocol = 'https' if request.is_secure() else 'http'
-        activation_url = f'{protocol}://{current_site.domain}{reverse("activate")}' \
+        activation_url = f'{protocol}://{current_site.domain}{reverse("authorization-activate")}' \
                          f'?uid={user.id}&token={token}'
 
         # Create activation email message
@@ -65,6 +67,61 @@ class RegistrationLogic:
             return Response({'detail': 'Account activated successfully.'}, status=status.HTTP_200_OK)
         else:
             return Response({'detail': 'Invalid activation link.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginLogic:
+    @staticmethod
+    def authenticate_user(username: str, password: str) -> dict:
+        """
+        Authenticates a user with the provided username and password.
+
+        Args:
+            username: The username of the user.
+            password: The password of the user.
+
+        Returns: A dictionary containing the authentication token if the credentials are valid,
+        or an error message if the credentials are invalid.
+
+        Raises: -
+        """
+        user = authenticate(username=username, password=password)
+        if user:
+            token = JWTAuthenticationMiddleware.generate_token(user)
+            return {'token': token}
+        else:
+            return {'error': 'Invalid credentials'}
+
+    @classmethod
+    def authenticate_user_service(cls, request) -> Response:
+        """
+        Authenticates a user based on the request data.
+
+        Args:
+            request: The request object.
+
+        Returns: The response containing the authentication token if the credentials are valid,
+        or an error message if the credentials are invalid.
+
+        Raises: -
+        """
+        username: str = request.data.get('username')
+        password: str = request.data.get('password')
+        response_data: dict = cls.authenticate_user(username, password)
+        status_code = status.HTTP_200_OK if 'token' in response_data else status.HTTP_401_UNAUTHORIZED
+        return Response(response_data, status=status_code)
+
+    @staticmethod
+    def logout_user_service() -> Response:
+        """
+        Logs out the user and deletes the JWT cookie.
+
+        Returns: The response indicating successful logout.
+
+        Raises: -
+        """
+        response = Response({'success': 'Successfully logged out'})
+        response.delete_cookie('jwt')
+        return response
 
 
 class PasswordLogic:
