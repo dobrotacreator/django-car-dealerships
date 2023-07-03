@@ -17,3 +17,8 @@ class ReadOnly(BasePermission):
     def has_permission(self, request, view):
         # Allow read-only methods (GET, HEAD, OPTIONS) for all users
         return request.method in SAFE_METHODS
+
+
+class CreateAndReadOnly(BasePermission):
+    def has_permission(self, request, view):
+        return request.method in ('POST', 'GET', 'HEAD', 'OPTIONS')

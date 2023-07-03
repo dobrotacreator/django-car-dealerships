@@ -15,6 +15,7 @@ pytest-django = "*"
 pyjwt = "*"
 drf-spectacular = "*"
 django-debug-toolbar = "*"
+django-filter = "*"
 
 [dev-packages]
 flake8 = "*"
