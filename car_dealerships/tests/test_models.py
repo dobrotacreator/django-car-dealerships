@@ -1,6 +1,5 @@
 import pytest
 
-from src.authorization.models import User
 from src.cars.models import CarModel, CarFeatures
 from src.customers.models import Customer
 from src.dealerships.models import Dealership, DealershipCarModel
@@ -13,15 +12,6 @@ def setup_data():
     # Create CarModel objects
     car_model1 = CarModel.objects.create(name='Model 1')
     car_model2 = CarModel.objects.create(name='Model 2')
-
-    # Create a Customer instance
-    user_customer = User.objects.create_user(username='customer1', password='password', role=User.Roles.CUSTOMER)
-
-    # Create a Dealership instance
-    user_dealership = User.objects.create_user(username='dealership1', password='password', role=User.Roles.DEALERSHIP)
-
-    # Create a Supplier instance
-    user_supplier = User.objects.create_user(username='supplier1', password='password', role=User.Roles.SUPPLIER)
 
     # Create CarFeatures objects
     car_features1 = CarFeatures.objects.create(
@@ -47,7 +37,6 @@ def setup_data():
 
     # Create Dealership objects
     dealership = Dealership.objects.create(
-        user=user_dealership,
         name='Test Dealership',
         location='US',
         car_features=car_features1,
@@ -59,7 +48,6 @@ def setup_data():
 
     # Create Customer object
     customer = Customer.objects.create(
-        user=user_customer,
         balance=50000,
         description='Test customer',
         is_active=True
@@ -72,7 +60,6 @@ def setup_data():
 
     # Create Supplier object
     supplier = Supplier.objects.create(
-        user=user_supplier,
         name='Test Supplier',
         founding_year=2000,
         description='Test supplier',
@@ -102,9 +89,6 @@ def setup_data():
     }
 
     # Clean up the created objects after the tests
-    user_supplier.delete()
-    user_customer.delete()
-    user_dealership.delete()
     dealership.delete()
     car_model1.delete()
     car_model2.delete()

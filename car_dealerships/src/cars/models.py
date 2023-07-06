@@ -4,7 +4,6 @@ from django.db import models
 
 class CarModel(models.Model):
     name = models.CharField(max_length=255)
-    features = models.OneToOneField('CarFeatures', on_delete=models.CASCADE, related_name='model')
 
 
 class CarFeatures(models.Model):
@@ -19,13 +18,13 @@ class CarFeatures(models.Model):
         ORANGE = 'O', 'Orange'
         PURPLE = 'P', 'Purple'
 
-    color = models.CharField(max_length=10, choices=Color.choices, null=True)
-    year = models.PositiveIntegerField(null=True)
-    mileage = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    gearbox = models.CharField(max_length=100, null=True)
-    drive = models.CharField(max_length=100, null=True)
-    steering_wheel = models.CharField(max_length=100, null=True)
-    engine_power = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    color = models.CharField(max_length=10, choices=Color.choices)
+    year = models.PositiveIntegerField()
+    mileage = models.DecimalField(max_digits=10, decimal_places=2)
+    gearbox = models.CharField(max_length=100)
+    drive = models.CharField(max_length=100)
+    steering_wheel = models.CharField(max_length=100)
+    engine_power = models.DecimalField(max_digits=10, decimal_places=2)
     vin_number = models.CharField(
         max_length=17,
         validators=[

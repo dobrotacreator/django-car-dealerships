@@ -1,4 +1,4 @@
 #!/bin/bash
 
 sleep 10
-celery -A config worker -l INFO
+celery -A car_dealerships worker --loglevel=INFO
