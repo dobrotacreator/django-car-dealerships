@@ -16,6 +16,7 @@ pyjwt = "*"
 drf-spectacular = "*"
 django-debug-toolbar = "*"
 django-filter = "*"
+sqlalchemy = "*"
 
 [dev-packages]
 flake8 = "*"
