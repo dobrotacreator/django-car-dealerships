@@ -12,6 +12,11 @@ redis = "*"
 psycopg = {extras = ["binary"], version = "*"}
 django-countries = "*"
 pytest-django = "*"
+pyjwt = "*"
+drf-spectacular = "*"
+django-debug-toolbar = "*"
+django-filter = "*"
+sqlalchemy = "*"
 
 [dev-packages]
 flake8 = "*"
