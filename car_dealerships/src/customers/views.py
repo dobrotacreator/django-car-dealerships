@@ -4,11 +4,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from core.permissions import IsAdmin, ReadOnly, IsOwner, CreateAndReadOnly
+from src.cars.serializers import CarFeaturesSerializer
 from .permissions import IsCustomer
 from .models import Customer
 from .serializers import CustomerSerializer
 from .tasks import process_offer_creation
-from ..cars.serializers import CarFeaturesSerializer
 
 
 class CustomerViewSet(viewsets.ModelViewSet):

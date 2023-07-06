@@ -8,6 +8,15 @@ from .models import Dealership, DealershipCarModel
 class CarPurchaseService:
     @staticmethod
     def purchase_cars():
+        """
+        Perform the purchase of cars for all dealerships.
+
+        This method retrieves the car features for each dealership, filters the available car models
+        based on the car features, selects the car model with the highest matching features and lowest price,
+        and performs the purchase by updating the dealership's balance, creating history records, and adjusting
+        the count of the purchased car model in the supplier's stock.
+
+        """
         # Get all dealerships
         dealerships = Dealership.objects.all()
 
