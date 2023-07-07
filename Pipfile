@@ -17,6 +17,7 @@ drf-spectacular = "*"
 django-debug-toolbar = "*"
 django-filter = "*"
 sqlalchemy = "*"
+gunicorn = "*"
 
 [dev-packages]
 flake8 = "*"

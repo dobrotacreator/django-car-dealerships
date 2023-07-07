@@ -30,6 +30,8 @@ DEBUG = os.environ.get('DJANGO_DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8080', 'http://web:8080', 'http://nginx:8080']
+
 AUTH_USER_MODEL = "authorization.User"
 
 REST_FRAMEWORK = {

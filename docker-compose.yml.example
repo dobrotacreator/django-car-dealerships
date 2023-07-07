@@ -2,7 +2,7 @@ version: '3'
 
 services:
 
-  redis:
+  broker:
     container_name: redis
     image: redis:latest
     ports:
@@ -31,11 +31,10 @@ services:
     entrypoint: /app/entrypoints/entrypoint_celery.sh
     restart: always
     environment:
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
       CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
     depends_on:
-      - redis
+      - broker
       - db
 
   web:
@@ -48,10 +47,21 @@ services:
     ports:
       - "8000:8000"
     depends_on:
+      - db
       - celery
     environment:
       DJANGO_SETTINGS_MODULE: config.settings
     env_file: .env
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
 
   pgadmin:
     container_name: pgadmin
