@@ -1,9 +1,10 @@
 FROM python:3.10-slim-bullseye as base
 WORKDIR /app
-COPY car_dealerships .
-COPY Pipfile Pipfile.lock ./
+COPY Pipfile Pipfile.lock /app/
 RUN pip install pipenv \
-    && pipenv install --system
+ && pipenv --python 3.10 \
+ && pipenv install --system --deploy
+COPY car_dealerships /app/
 
 FROM base as celery
 RUN chmod +x entrypoints/entrypoint_celery.sh
