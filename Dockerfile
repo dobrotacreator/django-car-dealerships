@@ -12,4 +12,5 @@ CMD ["celery", "-A", "car_dealerships.config", "worker", "-l", "info"]
 
 FROM base as django
 RUN chmod +x entrypoints/entrypoint_django.sh
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "car_dealerships.config.wsgi:application", "--bind", "0.0.0.0:8000"]
